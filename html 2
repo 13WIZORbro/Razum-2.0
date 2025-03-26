@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление проектами</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* Стили для боковой панели */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        
+        .sidebar-visible {
+            transform: translateX(0);
+        }
+        
+        /* Стили для основного контента */
+        .main-content {
+            padding: 20px;
+            transition: none;
+        }
+        
+        /* Стили для кнопки переключения */
+        .sidebar-toggle {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            background: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 101;
+            font-size: 20px;
+        }
+        
+        /* Стили для поиска */
+        .search-bar {
+            margin-bottom: 30px;
+            margin-top: 40px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        /* Стили для списка проектов */
+        .project-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .project-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .project-item:hover {
+            color: #0066cc;
+        }
+        
+        /* Стили для оверлея */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overlay-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Стили для страницы проекта */
+        .project-page {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .project-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .task-form {
+            margin-bottom: 30px;
+        }
+        
+        .task-form input, .task-form select {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .task-form button {
+            padding: 8px 15px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .task-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .task-list th, .task-list td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .task-list th {
+            background-color: #f5f5f5;
+        }
+        
+        .back-button {
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle" id="toggleButton">☰</button>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="sidebar" id="sidebar">
+        <div class="search-bar">
+            <input type="text" placeholder="search...">
+        </div>
+        
+        <ul class="project-list" id="projectList">
+            <li class="project-item" data-project="1">Проект 1</li>
+            <li class="project-item" data-project="2">Проект 2</li>
+            <li class="project-item" data-project="3">Проект 3</li>
+            <li class="project-item" data-project="4">Проект 4</li>
+        </ul>
+    </div>
+    
+    <div class="main-content" id="mainContent">
+        <div class="quote" id="quote">
+            <p>Выберите проект из списка слева</p>
+        </div>
+        
+        <div class="project-page" id="projectPage">
+            <button class="back-button" id="backButton">← Назад к списку</button>
+            <h1 class="project-title" id="projectTitle">Название проекта</h1>
+            
+            <div class="task-form">
+                <input type="text" id="taskName" placeholder="написать план">
+                <input type="text" id="taskAssignee" placeholder="исполнитель">
+                <input type="date" id="taskDueDate">
+                <select id="taskPriority">
+                    <option value="low">Низкий</option>
+                    <option value="medium" selected>Средний</option>
+                    <option value="high">Высокий</option>
+                </select>
+                <button id="addTask">Добавить</button>
+            </div>
+            
+            <table class="task-list">
+                <thead>
+                    <tr>
+                        <th>Задача</th>
+                        <th>Исполнитель</th>
+                        <th>Срок</th>
+                        <th>Приоритет</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody">
+                    <!-- Задачи будут добавляться сюда -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Элементы управления
+        const toggleButton = document.getElementById('toggleButton');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const projectItems = document.querySelectorAll('.project-item');
+        const quote = document.getElementById('quote');
+        const projectPage = document.getElementById('projectPage');
+        const projectTitle = document.getElementById('projectTitle');
+        const backButton = document.getElementById('backButton');
+        const addTaskButton = document.getElementById('addTask');
+        const taskTableBody = document.getElementById('taskTableBody');
+        
+        // Управление боковой панелью
+        toggleButton.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-visible');
+            overlay.classList.toggle('overlay-visible');
+            toggleButton.textContent = sidebar.classList.contains('sidebar-visible') ? '✕' : '☰';
+            toggleButton.style.left = sidebar.classList.contains('sidebar-visible') ? '270px' : '20px';
+        });
+        
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('sidebar-visible');
+            overlay.classList.remove('overlay-visible');
+            toggleButton.textContent = '☰';
+            toggleButton.style.left = '20px';
+        });
+        
+        // Переход в проект
+        projectItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                const projectName = this.textContent;
+                
+                // Показываем страницу проекта
+                projectTitle.textContent = projectName;
+                quote.style.display = 'none';
+                projectPage.style.display = 'block';
+                
+                // Закрываем боковую панель
+                sidebar.classList.remove('sidebar-visible');
+                overlay.classList.remove('overlay-visible');
+                toggleButton.textContent = '☰';
+                toggleButton.style.left = '20px';
+                
+                // Загружаем задачи для проекта (здесь можно добавить AJAX-запрос)
+                loadTasks(projectId);
+            });
+        });
+        
+        // Кнопка "Назад"
+        backButton.addEventListener('click', function() {
+            quote.style.display = 'block';
+            projectPage.style.display = 'none';
+        });
+        
+        // Добавление новой задачи
+        addTaskButton.addEventListener('click', function() {
+            const taskName = document.getElementById('taskName').value;
+            const assignee = document.getElementById('taskAssignee').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (taskName && assignee && dueDate) {
+                addTaskToTable(taskName, assignee, dueDate, priority);
+                
+                // Очищаем поля формы
+                document.getElementById('taskName').value = '';
+                document.getElementById('taskAssignee').value = '';
+                document.getElementById('taskDueDate').value = '';
+                document.getElementById('taskPriority').value = 'medium';
+            }
+        });
+        
+        // Функция для загрузки задач (заглушка)
+        function loadTasks(projectId) {
+            // Очищаем таблицу
+            taskTableBody.innerHTML = '';
+            
+            // Здесь должен быть AJAX-запрос к серверу
+            // Для примера добавляем тестовые данные
+            const demoTasks = [
+                { name: 'Создать дизайн', assignee: 'Иван', dueDate: '2023-12-15', priority: 'high' },
+                { name: 'Написать ТЗ', assignee: 'Мария', dueDate: '2023-12-10', priority: 'medium' },
+                { name: 'Протестировать', assignee: 'Алексей', dueDate: '2023-12-20', priority: 'low' }
+            ];
+            
+            demoTasks.forEach(task => {
+                addTaskToTable(task.name, task.assignee, task.dueDate, task.priority);
+            });
+        }
+        
+        // Функция для добавления задачи в таблицу
+        function addTaskToTable(name, assignee, dueDate, priority) {
+            const row = document.createElement('tr');
+            
+            // Преобразуем приоритет в читаемый вид
+            let priorityText = '';
+            switch(priority) {
+                case 'low': priorityText = 'Низкий'; break;
+                case 'medium': priorityText = 'Средний'; break;
+                case 'high': priorityText = 'Высокий'; break;
+            }
+            
+            // Форматируем дату
+            const formattedDate = new Date(dueDate).toLocaleDateString('ru-RU');
+            
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${assignee}</td>
+                <td>${formattedDate}</td>
+                <td>${priorityText}</td>
+            `;
+            
+            taskTableBody.appendChild(row);
+        }
+    </script>
+</body>
+</html>
