@@ -20,7 +20,7 @@
     docker compose up
     ```
 
-+ Для создания пользователя с ролью админ:
++ Для создания пользователя с ролью администратор:
 
     ```bash
     docker compose exec web python3 django-admin createsuperuser

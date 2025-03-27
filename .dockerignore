@@ -1,0 +1,9 @@
+.venv
+README.md
+CHANGELOG.md
+docker-compose.yml
+Dockerfile
+.git
+.gitattributes
+.gitignore
+.idea
