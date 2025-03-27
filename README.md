@@ -20,6 +20,12 @@
     docker compose up
     ```
 
++ Создание таблиц в базе данных:
+
+    ```bash
+    docker compose exec web python3 project/manage.py migrate
+    ```
+
 + Для создания пользователя с ролью администратор:
 
     ```bash

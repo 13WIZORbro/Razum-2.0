@@ -1,0 +1,56 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+    grid-template-rows: repeat(auto, auto);
+    gap: 15px;
+}
+
+.grid-item {
+    text-align: center;
+    border: 3px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.subtask_name {
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.dates {
+    background-color: rgb(245, 227, 219);
+    border-radius: 10px;
+}
+
+.task_name {
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    background-color: rgb(225, 219, 245);
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.task-button {
+    padding: 10px 20px;
+    border: 1px solid #000;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.subtasks-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtask-info {
+    margin-bottom: 10px;
+}

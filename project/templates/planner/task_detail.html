@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+    Задача
+{% endblock title %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/task_grid.css' %}">
+{% endblock head %}
+{% block content %}
+    <div class="main-content">
+        <div class="task_name">{{ task.name }}</div>
+        <div class="header">
+            <button class="task-button">Задача</button>
+        </div>
+        <div class="subtasks-title">Подзадачи:</div>
+        <div class="grid-container">
+            {% for subtask in subtasks %}
+                <div class="grid-item">
+                    <div class="subtask-info">
+                        <strong>Название подзадачи:</strong>
+                        <p>{{ subtask.name }}</p>
+                    </div>
+                    <div class="subtask-info">
+                        <strong>Статус:</strong>
+                        <p>{{ subtask.status }}</p>
+                    </div>
+                    <div class="subtask-info">
+                        <strong>Приоритет:</strong>
+                        <p>{{ subtask.priority }}</p>
+                    </div>
+                    <div class="subtask-info">
+                        <strong>Сроки:</strong>
+                        <p>{{ subtask.start_date }} - {{ subtask.end_date }}</p>
+                    </div>
+                    <div class="subtask-info">
+                        <strong>Пояснение:</strong>
+                        <p>{{ subtask.additional_description }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Задачи еще не созданы</p>
+            {% endfor %}
+        </div>
+    {% endblock content %}

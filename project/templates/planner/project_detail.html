@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+    Проекты
+{% endblock title %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/grid.css' %}">
+{% endblock head %}
+{% block content %}
+    <div class="main-content">
+        <div class="project_name">{{ project.name }}</div>
+        <div class="grid-container">
+            {% for task in tasks %}
+                <div class="grid-item">
+                    <div class="task_name">{{ task.name }}</div>
+                    <div class="dates">{{ subtask.start_date }} - {{ subtask.end_date }}</div>
+                    <p>{{ task.priority }}</p>
+                    <p>{{ task.performer }}</p>
+                </div>
+            {% empty %}
+                <p>Задачи еще не созданы</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
