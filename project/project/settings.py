@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # local
     "accounts.apps.AccountsConfig",
+    "planner.apps.PlannerConfig",
     # third-party
     "allauth",
     "allauth.account",
