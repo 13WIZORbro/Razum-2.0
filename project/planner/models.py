@@ -46,7 +46,7 @@ class Task(BaseTask):
 class Subtask(BaseTask):
     priority = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=1)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="subtasks")
-    performer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks")
+    performer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks_to_do")
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks")
     additional_description = models.CharField(max_length=500)
 
