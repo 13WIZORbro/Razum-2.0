@@ -1,0 +1,32 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.grid-item {
+    text-align: center;
+    border: 3px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.task_name {
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.dates {
+    background-color: rgb(245, 227, 219);
+    border-radius: 10px;
+}
+
+.project_name {
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    background-color: rgb(225, 219, 245);
+    border-radius: 30px;
+    margin-bottom: 20px;
+}

@@ -154,7 +154,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-
-geoip/
-ngrok.yml

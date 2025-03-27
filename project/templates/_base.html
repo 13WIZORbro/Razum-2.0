@@ -7,12 +7,33 @@
         <title>
             {% block title %}
             {% endblock title %}
+            | TeamPro
         </title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% block head %}
+        {% endblock head %}
     </head>
     <body>
+        <div class="menu">
+            <button class="sidebar-toggle" id="toggleButton">☰</button>
+            <div class="overlay" id="overlay"></div>
+            <div class="sidebar" id="sidebar">
+                <div class="search-bar">
+                    <input type="text" placeholder="search...">
+                </div>
+                <ul class="project-list">
+                    {% for project in projects %}
+                        <li class="project-item">{{ project.name }}</li>
+                    {% empty %}
+                        <p>There are no items yet.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
         <div class="container">
             {% block content %}
             {% endblock content %}
         </div>
+        <script src='{% static "js/menu.js" %}'></script>
     </body>
 </html>
