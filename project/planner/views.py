@@ -1,28 +1,24 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from .models import Project
 
 
-# class HomePageView(TemplateView):
-#     template_name = "planner/homepage.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context["projects"] = ["popa"]
-#       #  context["latest_articles"] = Project.objects.all()[:5]
-#         return context
 
-class Prj():
-    name = "popa"
 
 class HomePageView(TemplateView):
+    User = get_user_model()
+    user = User.objects.get(id=1)
+    print(" id = ", user.id)
+    pr = Project(name="test_name", manager=user, leader=user)
+    pr.save()
+
     template_name = "planner/homepage.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pr1 = Prj()
-        pr2 = Prj()
-        pr2.name = "popa2"
-        context["projects"] = [pr1, pr2]
+        #print(Project.objects.all())
+        context["projects"] = Project.objects.all()
         return  context
 
 def project(request):

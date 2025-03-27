@@ -17,6 +17,8 @@ class BaseTask(models.Model):
 
 
 
+
+
 class Project(BaseTask):
     manager = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="manager_projects")
     leader = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="leader_projects")
