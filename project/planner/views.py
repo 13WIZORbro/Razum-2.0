@@ -8,11 +8,11 @@ from .models import Project
 
 
 class HomePageView(TemplateView):
-    User = get_user_model()
-    user = User.objects.get(id=1)
-    print(" id = ", user.id)
-    pr = Project(name="test_name", manager=user, leader=user)
-    pr.save()
+    # User = get_user_model()
+    # user = User.objects.get(id=1)
+    #print(" id = ", user.id)
+    # pr = Project(name="test_name", manager=user, leader=user)
+    # pr.save()
 
     template_name = "planner/homepage.html"
     def get_context_data(self, **kwargs):
@@ -22,7 +22,7 @@ class HomePageView(TemplateView):
         return  context
 
 def project(request):
-    return render(request, "planner/task_list.html")
+    return render(request, "planner/.html")
 
 def task(request):
     return render(request, "planner/subtask_list.html")
