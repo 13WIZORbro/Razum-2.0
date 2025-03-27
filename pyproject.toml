@@ -11,6 +11,11 @@ python-dotenv = "^1.1.0"
 django-allauth = "^65.5.0"
 
 
+[tool.poetry.group.dev.dependencies]
+djlint = "^1.36.4"
+isort = "^6.0.1"
+ruff = "^0.11.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
