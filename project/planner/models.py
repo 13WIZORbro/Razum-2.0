@@ -12,18 +12,19 @@ class BaseTask(models.Model):
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(null=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=1)
-
     class Meta:
         abstract = True
 
 
 
 class Project(BaseTask):
-    manager = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="projects")
+    manager = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="manager_projects")
+    leader = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="leader_projects")
+#    performers = models.ManyToManyField(get_user_model(), related_name="assigned_projects")
 
     def __str__(self):
         return (f"Project: {self.name}\n"
-                f"Manager: {self.manager}\n"
+                f"Leader: {self.leader}\n"
                 f"Status: {self.status}\n"
                 f"Deadline: {self.end_date}")
 
@@ -47,7 +48,7 @@ class Subtask(BaseTask):
     priority = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=1)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="subtasks")
     performer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks_to_do")
-    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks")
+    # creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="subtasks")
     additional_description = models.CharField(max_length=500)
 
     def __str__(self):

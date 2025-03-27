@@ -1,10 +1,15 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+
+from project.planner.models import Project
 
 
-@login_required
-def home(request):
-    return render(request, "planner/homepage.html")
+class HomePageView(TemplateView):
+    template_name = "homepage.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["projects"] = Project.objects.f
 
 def project(request):
     return render(request, "planner/task_list.html")
