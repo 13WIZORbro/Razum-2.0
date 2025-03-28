@@ -20,6 +20,8 @@ class BaseTask(models.Model):
 
 
 class Project(BaseTask):
+    # id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=200, unique=True)
     manager = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="manager_projects")
     leader = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="leader_projects")
 #    performers = models.ManyToManyField(get_user_model(), related_name="assigned_projects")
