@@ -15,6 +15,7 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+
         user = self.request.user
 
         projects = Project.objects.filter(Q(manager=user) | Q(leader=user)).distinct()
@@ -31,10 +32,28 @@ class ProjectPageView(TemplateView):
         project_name = self.kwargs["project_name"]
         current_user = self.request.user
 
+
         projects = Project.objects.filter(Q(manager=current_user) | Q(leader=current_user)).distinct()
+
+
+
         current_project = get_object_or_404(Project, name=project_name)
 
+        tsk = Task(project=current_project, performers=(current_user))
+        tsk.save()
+
+
+        # projects = projects + Task.objects().filter(project=current_project)
+
+
+
         tasks = Task.objects.filter(project=current_project)
+
+        # performers = []
+        # performers = [performers + i.objects.filte(performers=current_user) for i in tasks]
+        # print(performers)
+
+        print(tasks.all().values_list("performers"))
 
         context["tasks"] = tasks
         context["projects"] = projects
