@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -18,7 +19,9 @@ class HomePageView(TemplateView):
 
         user = self.request.user
 
-        projects = Project.objects.filter(Q(manager=user) | Q(leader=user)).distinct()
+        projects = Project.objects.filter(
+            Q(manager=user) | Q(leader=user) | Q(tasks__performers=user)
+        ).distinct()
 
         context["projects"] = projects
         return  context
@@ -30,22 +33,23 @@ class ProjectPageView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         project_name = self.kwargs["project_name"]
-        current_user = self.request.user
+        user = self.request.user
 
 
-        projects = Project.objects.filter(Q(manager=current_user) | Q(leader=current_user)).distinct()
-
-
+        projects = Project.objects.filter(
+            Q(manager=user) | Q(leader=user) | Q(tasks__performers=user)
+        ).distinct()
 
         current_project = get_object_or_404(Project, name=project_name)
 
-        tsk = Task(project=current_project, performers=(current_user))
-        tsk.save()
+        if current_project not in projects:
+            raise PermissionDenied("У вас нет доступа к этому проекту")
+
+        # tsk = Task(project=current_project, performers=(user))
+        # tsk.save()
 
 
         # projects = projects + Task.objects().filter(project=current_project)
-
-
 
         tasks = Task.objects.filter(project=current_project)
 
@@ -57,6 +61,7 @@ class ProjectPageView(TemplateView):
 
         context["tasks"] = tasks
         context["projects"] = projects
+        context["current_project"] = current_project
         return  context
 
 class TaskPageView(TemplateView):
@@ -67,13 +72,14 @@ class TaskPageView(TemplateView):
 
         project_name = self.kwargs['project_name']
         task_id = self.kwargs["task_id"]
-
         user = self.request.user
 
-        projects = Project.objects.filter(Q(manager=user) | Q(leader=user)).distinct()
+        projects = Project.objects.filter(
+            Q(manager=user) | Q(leader=user) | Q(tasks__performers=user)
+        ).distinct()
+
         current_project = get_object_or_404(Project, name=project_name)
         current_task = get_object_or_404(Task, id=task_id)
-
 
         tasks = Task.objects.filter(project=current_project)
 
@@ -82,7 +88,10 @@ class TaskPageView(TemplateView):
         context["subtasks"] = subtasks
         context["tasks"] = tasks
         context["projects"] = projects
-        return  context
+        context["current_project"] = current_project
+        context["current_task"] = current_task
+
+        return context
 
 def project(request):
     return render(request, "planner/project.html")
