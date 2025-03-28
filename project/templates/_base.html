@@ -7,7 +7,7 @@
         <title>
             {% block title %}
             {% endblock title %}
-            | TeamPro
+            | OptiTask
         </title>
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
         {% block head %}
@@ -23,9 +23,9 @@
                 </div>
                 <ul class="project-list">
                     {% for project in projects %}
-                    <li class="project-item">
-                        <a href="{% url 'project' project.name %}">{{ project.name }}</a>
-                    </li>
+                        <li class="project-item">
+                            <a href="{% url 'project' project.name %}">{{ project.name }}</a>
+                        </li>
                     {% empty %}
                         <p>Проектов еще нет</p>
                     {% endfor %}
